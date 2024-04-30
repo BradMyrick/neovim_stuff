@@ -1,88 +1,77 @@
-# Kodr's Neovim Mappings
+vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
+-- Go to definition
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 
-## Basic Movement
-- `h` - move left
-- `j` - move down
-- `k` - move up
-- `l` - move right
-- `w` - move forward by word
-- `b` - move backward by word
-- `<leader>h` - move to start of line
-- `<leader>j` - move to first non-blank character of line
-- `<leader>l` - move to end of line
-- `gg` - move to first line of file
-- `G` - move to last line of file
-- `gt` - go to a specific line number
-- `%` - move to matching bracket
+-- Show references 
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 
-## Scrolling
-- `Ctrl + u` - move up half a page
-- `Ctrl + d` - move down half a page
-- `Ctrl + b` - move up a full page
-- `Ctrl + f` - move down a full page
-- `H` - move to top of screen
-- `M` - move to middle of screen
-- `L` - move to bottom of screen
-- `zt` - scroll to make current line the top
-- `zz` - scroll to make current line the center
-- `zb` - scroll to make current line the bottom
+-- Rename symbol
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
 
-## Editing
-- `i` - enter insert mode before cursor
-- `a` - enter insert mode after cursor
-- `o` - insert new line below and enter insert mode
-- `O` - insert new line above and enter insert mode
-- `u` - undo last change
-- `Ctrl + r` - redo last change
-- `.` - repeat last command
+-- Show hover information
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
 
-## Visual Mode
-- `v` - enter visual mode
-- `V` - enter visual line mode
-- `Ctrl + v` - enter visual block mode
-- `<C-c>` - copy selection to clipboard
-- `<C-x>` - cut selection to clipboard
-- `p` - paste after cursor
-- `P` - paste before cursor
+-- Format buffer
+vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, opts)
 
-## Custom LSP Mappings
-- `gd` - go to definition
-- `gr` - show references
-- `<leader>rn` - rename symbol
-- `K` - show hover information
-- `<leader>f` - format buffer
+-- Git status
+vim.keymap.set('n', '<leader>gs', vim.cmd.Git)  
+-- Open changed files in git 
+vim.keymap.set('n', '<leader>gd', vim.cmd.Gdiffsplit)
 
-## Custom Git Mappings
-- `<leader>gs` - git status
-- `<leader>gd` - open changed files in git (Gdiffsplit)
-- `<leader>gp` - git pull
-- `<leader>gu` - git push
-- `<leader>gc` - open commit buffer for creating a new commit message
+-- Git pull 
+vim.keymap.set('n', '<leader>gp', function() vim.cmd.Git('pull') end)
 
-## Custom File Mappings
-- `<leader>pv` - open file explorer
-- `<leader>w` - save current buffer
-- `<leader>q` - close current buffer
-- `<leader>n` - open new file
+-- Git push
+vim.keymap.set('n', '<leader>gu', function() vim.cmd.Git('push') end) 
 
-## Custom Command Mappings
-- `<leader><leader>a` - select all and copy to clipboard
+-- Git push
+vim.keymap.set('n', '<leader>gc', function()
+      vim.cmd('Git commit')
+  end)
 
-## Window Navigation
-- `<C-h>` - move to left window
-- `<C-j>` - move to below window
-- `<C-k>` - move to above window
-- `<C-l>` - move to right window
+-- Save current buffer
+vim.keymap.set('n', '<leader>w', vim.cmd.write)
 
-## System Clipboard Integration
-- `<C-c>` - copy selection to clipboard (visual mode)
-- `<C-x>` - cut selection to clipboard (visual mode)
-- `<C-v>` - paste from clipboard (insert and normal mode)
+-- Close current buffer
+vim.keymap.set('n', '<leader>q', vim.cmd.bdelete)
 
-## Telescope Mappings
-- `<leader>ff` - find files
-- `<leader>fg` - live grep
-- `<leader>fb` - buffers
-- `<leader>fh` - help tags
-- `<leader>fs` - grep string
+-- Open new file
+vim.keymap.set('n', '<leader>n', vim.cmd.enew)
 
+-- Navigate between windows
+vim.keymap.set('n', '<C-h>', '<C-w>h')
+vim.keymap.set('n', '<C-j>', '<C-w>j') 
+vim.keymap.set('n', '<C-k>', '<C-w>k')
+vim.keymap.set('n', '<C-l>', '<C-w>l')
+
+-- Custom Copy Paste
+vim.keymap.set("v", "<C-c>", '"+y') -- Copy in visual mode
+vim.keymap.set("v", "<C-x>", '"+d') -- Cut in visual mode
+
+vim.keymap.set({"i", "n"}, "<C-v>", "<C-r>+") -- Paste in insert mode
+
+vim.keymap.set('n', '<leader><leader>a', ':%y+<CR>', {noremap = true, silent = true})
+
+-- Move to start of line --
+vim.keymap.set("n", "<leader>h", "0")  
+-- move to end of line --
+vim.keymap.set("n", "<leader>l", "$")
+-- Move to first non-blank line --
+vim.keymap.set("n", "<leader>j", "^")
+
+
+local lsp_zero = require('lsp-zero')
+
+lsp_zero.on_attach(function(client, bufnr)
+           lsp_zero.default_keymaps({buffer = bufnr})
+           end)
+require'lspconfig'.golangci_lint_ls.setup{}
+
+-- Terminal keymaps --
+-- Open terminal from normal mode
+vim.keymap.set('n', '<leader>t', ':terminal<CR>', {noremap = true, silent = true})
+-- Close terminal from terminal mode
+vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', {noremap = true, silent = true})
+-- jump back to previous file 
+vim.keymap.set('n', '<leader><leader><leader>', '<C-^>', {noremap = true, silent = true})
