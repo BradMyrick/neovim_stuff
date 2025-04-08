@@ -7,36 +7,53 @@
 - 🤖 AI-Powered Code Completion with GitHub Copilot 
 - 🎨 Modern UI with dashboard and custom theme
 - 🔧 Full LSP support with advanced completions
+- 🛠️ Enhanced Rust development with Rustaceanvim
 - ⚡ Fast startup with lazy-loading
-- 🛠️ Integrated development environment for multiple languages
 - 🌳 Treesitter-powered syntax highlighting
 - 🔍 Fuzzy finding with Telescope
-- 🐙 Git integration with fugitive
+- 🐙 Git integration with Fugitive
+
+---
 
 ## 🎯 Quick Start
 
 1. Clone this repository:
-```bash
-git clone https://github.com/BradMyrick/nvim-config.git ~/.config/nvim
-```
+   ```bash
+   git clone https://github.com/BradMyrick/nvim-config.git ~/.config/nvim
+   ```
 
 2. Install required dependencies:
-```bash
-# Neovim 0.10.0 or higher required
-sudo add-apt-repository ppa:neovim-ppa/unstable
-sudo apt update
-sudo apt install neovim
-```
+   ```bash
+   # Neovim 0.10.0 or higher required
+   sudo add-apt-repository ppa:neovim-ppa/unstable
+   sudo apt update
+   sudo apt install neovim
+
+   # Additional tools for plugins
+   sudo apt install ripgrep fd-find cmake gcc make
+   ```
+
+3. Install Rust tools:
+   ```bash
+   rustup component add rust-analyzer
+   ```
+
+4. Open Neovim and install plugins:
+   ```vim
+   :PackerSync
+   ```
+
+---
 
 ## ⌨️ Key Mappings
 
 ### 📁 File Management
 | Mapping | Description |
 |---------|-------------|
-| `<Space>pv` | Open file explorer |
-| `<Space>w` | Save buffer |
-| `<Space>q` | Close buffer |
-| `<Space>n` | New file |
+| `pv` | Open file explorer |
+| `w` | Save buffer |
+| `q` | Close buffer |
+| `n` | New file |
 
 ### 🔍 LSP Navigation
 | Mapping | Description |
@@ -44,23 +61,33 @@ sudo apt install neovim
 | `gd` | Go to definition |
 | `gr` | Show references |
 | `K` | Show documentation |
-| `<Space>rn` | Rename symbol |
-| `<Space>f` | Format buffer |
+| `rn` | Rename symbol |
+| `f` | Format buffer |
 
 ### 🌳 Git Commands
 | Mapping | Description |
 |---------|-------------|
-| `<Space>gs` | Git status |
-| `<Space>gc` | Git commit |
-| `<Space>gp` | Git pull |
-| `<Space>gu` | Git push |
+| `gs` | Git status |
+| `gc` | Git commit |
+| `gp` | Git pull |
+| `gu` | Git push |
 
 ### 🪟 Window Navigation
 | Mapping | Description |
 |---------|-------------|
-| `<C-h/j/k/l>` | Navigate windows |
-| `<Space>t` | Open terminal |
-| `<Esc>` | Exit terminal mode |
+| `` | Navigate windows |
+| `t` | Open terminal |
+| `` | Exit terminal mode |
+
+### 🦀 Rust-Specific Key Bindings (Rustaceanvim)
+| Mapping       | Description                     |
+|---------------|---------------------------------|
+| `a`   | Show code actions (grouped)    |
+| `K`           | Hover actions (Rust-specific)  |
+| `rr`  | Run the current file           |
+| `tm`  | View crate graph               |
+
+---
 
 ## 🎨 Configuration Highlights
 
@@ -68,19 +95,24 @@ sudo apt install neovim
 ```lua
 -- Modern plugin management with Packer
 use {
-    'glepnir/dashboard-nvim',  -- Custom start screen
-    'nvim-telescope/telescope.nvim',  -- Fuzzy finder
-    'neovim/nvim-lspconfig',  -- LSP configuration
-    'hrsh7th/nvim-cmp',  -- Completion engine
+    'mrcjkb/rustaceanvim', -- Enhanced Rust tools
+    'glepnir/dashboard-nvim', -- Custom start screen
+    'nvim-telescope/telescope.nvim', -- Fuzzy finder
+    'neovim/nvim-lspconfig', -- LSP configuration
 }
 
--- LSP setup for multiple languages
+-- Mason setup for language servers (except rust-analyzer)
 require('mason-lspconfig').setup({
     ensure_installed = {
         'gopls',      -- Go support
         'lua_ls',     -- Lua
-        'solidity',   -- Solidity
         'pyright'     -- Python
+    },
+    handlers = {
+        function(server_name)
+            if server_name == 'rust_analyzer' then return end -- Skip rust-analyzer setup (handled by Rustaceanvim)
+            require('lspconfig')[server_name].setup({})
+        end,
     }
 })
 ```
@@ -88,42 +120,58 @@ require('mason-lspconfig').setup({
 ### keymappings.lua
 ```lua
 -- Efficient keybindings for modern development
-vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)  -- Quick file navigation
+vim.keymap.set('n', 'pv', vim.cmd.Ex)  -- Quick file navigation
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition)  -- Go to definition
-vim.keymap.set('n', '<leader>gs', vim.cmd.Git)  -- Git integration
+
+-- Rust-specific mappings (Rustaceanvim)
+local bufnr = vim.api.nvim_get_current_buf()
+vim.keymap.set('n', 'a', function() vim.cmd.RustLsp('codeAction') end, { buffer = bufnr })
+vim.keymap.set('n', 'K', function() vim.cmd.RustLsp({'hover', 'actions'}) end, { buffer = bufnr })
 ```
+
+---
 
 ## 🔧 Plugin Configuration
 
-- **Dashboard**: Custom start screen with quick actions
-- **LSP**: Configured for Go, Rust, Python, and Solidity
-- **Telescope**: Fuzzy finder for files and text
-- **Treesitter**: Advanced syntax highlighting
-- **nvim-cmp**: Intelligent code completion
+- **Dashboard**: Custom start screen with quick actions.
+- **LSP**: Configured for Go, Python, Lua, and Rust.
+- **Rustaceanvim**: Enhanced Rust development tools, including debugging and crate graph visualization.
+- **Telescope**: Fuzzy finder for files and text.
+- **Treesitter**: Advanced syntax highlighting.
+- **nvim-cmp**: Intelligent code completion.
+
+---
 
 ## 🎯 Language Support
 
-- **Go**: Full LSP support with gopls
-- **Rust**: Enhanced development with rustaceanvim
-- **Python**: Intelligent completion with pyright
-- **Solidity**: Smart contract development ready
+- **Go**: Full LSP support with gopls.
+- **Rust**: Enhanced development with Rustaceanvim.
+- **Python**: Intelligent completion with pyright.
+- **Solidity**: Smart contract development ready.
+
+---
 
 ## 🤖 Copilot Integration
 
-- **Requirements**: GitHub Copilot subscription
-- **Setup**: Included in init.lua
-- **Authentication**: Run `:Copilot auth` to authenticate
+- **Requirements**: GitHub Copilot subscription.
+- **Setup**: Included in `plugins.lua`.
+- **Authentication**: Run `:Copilot auth` to authenticate.
+
+---
 
 ## 🤝 Contributing
 
 Feel free to submit issues and enhancement requests! PRs are welcome.
+
+---
 
 ## 📝 License
 
 MIT License - feel free to use and modify!
 
 ---
-<div align="center">
-    <p>Made with ☕ by <a href="https://github.com/BradMyrick">Kodr</a></p>
-    <p>Systems Engineer</p>
-</div>
+
+
+    Made with ☕ by Kodr
+
+

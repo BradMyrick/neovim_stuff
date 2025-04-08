@@ -21,7 +21,16 @@ return require('packer').startup(function(use)
   -- Language stuff
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip'
-  use 'mrcjkb/rustaceanvim'
+    -- Rust specific tools
+  use {
+    'mrcjkb/rustaceanvim',
+    requires = {
+      'neovim/nvim-lspconfig',
+      'nvim-lua/plenary.nvim',
+      'mfussenegger/nvim-dap', -- For debugging support
+    },
+    ft = 'rust', -- Only load for Rust files
+  }
   use 'saecki/crates.nvim'
   use 'fatih/vim-go'
 
