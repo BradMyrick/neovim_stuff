@@ -18,3 +18,5 @@ vim.schedule(function()
   vim.cmd [[colorscheme tokyonight]]
   vim.cmd [[highlight Normal ctermfg=white ctermbg=black]]
 end)
+
+vim.opt.clipboard = "unnamedplus"

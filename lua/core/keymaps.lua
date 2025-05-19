@@ -55,3 +55,7 @@ map('t', '<Esc>', [[<C-\><C-n>]], opts)      -- Close terminal from terminal mod
 
 -- Jump back to previous file
 map('n', '<leader><leader><leader>', [[<C-^>]], opts)
+
+-- show error --
+
+map('n', '<leader>0', vim.diagnostic.open_float, { desc = 'Show diagnostic under cursor' })

@@ -21,31 +21,24 @@ return require('packer').startup(function(use)
   -- Language stuff
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip'
-    -- Rust specific tools
-  use {
-    'mrcjkb/rustaceanvim',
-    requires = {
-      'neovim/nvim-lspconfig',
-      'nvim-lua/plenary.nvim',
-      'mfussenegger/nvim-dap', -- For debugging support
-    },
-    ft = 'rust', -- Only load for Rust files
-  }
+  use 'hrsh7th/cmp-nvim-lsp'  -- LSP completion source
+  use 'hrsh7th/cmp-buffer'    -- Text buffer completions
+  use 'hrsh7th/cmp-path'      -- Filesystem path completions
+  use 'hrsh7th/nvim-cmp'      -- Core completion plugin
   use 'saecki/crates.nvim'
   use 'fatih/vim-go'
 
-    -- Core Utilities
+  -- Core Utilities
   use 'nvim-lua/plenary.nvim'
   use 'nvim-tree/nvim-web-devicons'
   use 'windwp/nvim-autopairs'
-
 
   -- Treesitter
   use 'nvim-treesitter/nvim-treesitter'
   use {
     'nvim-telescope/telescope-fzf-native.nvim',
     run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release',
-  }  
+  } 
   -- Telescope
   use 'nvim-telescope/telescope.nvim'
 
@@ -64,11 +57,10 @@ return require('packer').startup(function(use)
     config = function()
       require('plugins.dashboard')
     end
-  }
+    }
   use 'folke/trouble.nvim'
   use 'lvimuser/lsp-inlayhints.nvim'
   use 'folke/tokyonight.nvim'
-  
   -- LSP Zero
   use 'williamboman/mason.nvim'
 

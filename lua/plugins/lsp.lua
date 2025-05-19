@@ -1,17 +1,25 @@
 require('mason').setup()
-
 require('mason-lspconfig').setup({
-  ensure_installed = { 'lua_ls', 'pyright' },
-  automatic_installation = true, -- Automatically install servers
+  ensure_installed = { 'lua_ls', 'rust_analyzer' }, 
+  automatic_installation = true,
 })
 
-local lspconfig = require('lspconfig')
 
-require('mason-lspconfig').setup_handlers({
-  function(server_name)
-    if server_name == 'rust_analyzer' then
-      return -- Skip rust_analyzer setup (handled by rustaceanvim)
-    end
-    lspconfig[server_name].setup({})
-  end,
+require('lspconfig').rust_analyzer.setup({
+  settings = {
+    ["rust-analyzer"] = {
+      imports = {
+        granularity = { group = "module" },
+        prefix = "self"
+      },
+      cargo = {
+        buildScripts = { enable = true }
+      },
+      procMacro = { enable = true }
+    }
+  },
+  on_attach = function(client, bufnr)
+    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+  end
 })
+
