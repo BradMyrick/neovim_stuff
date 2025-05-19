@@ -11,6 +11,7 @@ vim.schedule(function()
   require('nvim-web-devicons').setup()
   require('plugins.dashboard')    -- Your KODR splash
   require('plugins.diagnostics')  
+  require('plugins.cmp')
   require('plugins.lsp')         
   require('plugins.telescope')    
 

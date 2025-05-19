@@ -19,14 +19,25 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
   -- Language stuff
-  use 'saadparwaiz1/cmp_luasnip'
-  use 'L3MON4D3/LuaSnip'
-  use 'hrsh7th/cmp-nvim-lsp'  -- LSP completion source
-  use 'hrsh7th/cmp-buffer'    -- Text buffer completions
-  use 'hrsh7th/cmp-path'      -- Filesystem path completions
-  use 'hrsh7th/nvim-cmp'      -- Core completion plugin
-  use 'saecki/crates.nvim'
-  use 'fatih/vim-go'
+  use("neovim/nvim-lspconfig")
+  use("hrsh7th/nvim-cmp") -- Autocompletion framework
+  use({
+    -- cmp LSP completion
+    "hrsh7th/cmp-nvim-lsp",
+    -- cmp Snippet completion
+    "hrsh7th/cmp-vsnip",
+    -- cmp Path completion
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-buffer",
+    after = { "hrsh7th/nvim-cmp" },
+    requires = { "hrsh7th/nvim-cmp" },
+  })
+
+  use("nvim-lua/popup.nvim")
+  -- Snippet engine
+  use('hrsh7th/vim-vsnip')
+  -- Adds extra functionality over rust analyzer
+  use("simrat39/rust-tools.nvim")
 
   -- Core Utilities
   use 'nvim-lua/plenary.nvim'
@@ -61,24 +72,6 @@ return require('packer').startup(function(use)
   use 'folke/trouble.nvim'
   use 'lvimuser/lsp-inlayhints.nvim'
   use 'folke/tokyonight.nvim'
-  -- LSP Zero
-  use 'williamboman/mason.nvim'
-
-  use {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x',
-    requires = {
-      {'neovim/nvim-lspconfig'},
-      {'williamboman/mason.nvim'},
-      {'williamboman/mason-lspconfig.nvim'},
-      {'hrsh7th/nvim-cmp'},
-      {'hrsh7th/cmp-nvim-lsp'},
-      {'hrsh7th/cmp-buffer'},
-      {'hrsh7th/cmp-path'},
-      {'L3MON4D3/LuaSnip'},
-    }
-  }
-
   if packer_bootstrap then
     require('packer').sync()
   end
